@@ -3,7 +3,6 @@
 session_start();
 include 'db.php';
 
-// Check if user is logged in
 if (isset($_SESSION['userID'])) {
     $user_id = $_SESSION['userID'];
 } else {
@@ -93,9 +92,7 @@ $result = mysqli_query($conn, $sql);
                                 <td><?php echo $sid; ?></td>
                                 <td><?php echo $dept; ?></td>
                                 <td style="text-align: center;">
-                                    <button type="button" class="btn-report-small" onclick="alert('Report submitted for Admin review.');">
-                                        ⚠️ Report
-                                    </button>
+                                    <button type="button" class="btn-report-small"> ⚠️ Report</button>
                                 </td>
                             </tr>
                     <?php

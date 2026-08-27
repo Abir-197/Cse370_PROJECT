@@ -8,7 +8,7 @@ if (isset($_POST['login'])) {
     $user_id  = trim($_POST['userid']);
     $password = trim($_POST['password']);
 
-    // 1. Check if user exists with matching password
+    //user exists with matching password
     $sql = "SELECT userID FROM user_info WHERE userID = '$user_id' AND password = '$password'";
     $result = mysqli_query($conn, $sql);
 
@@ -16,7 +16,7 @@ if (isset($_POST['login'])) {
         // Save the User ID in session directly from form input
         $_SESSION['userID'] = $user_id;
 
-        // 2. Check if this ID exists in student_info
+        //Check ID exists in student_info
         $sql_student = "SELECT userID FROM student_info WHERE userID = '$user_id'";
         $res_student = mysqli_query($conn, $sql_student);
 
@@ -25,7 +25,7 @@ if (isset($_POST['login'])) {
             exit();
         }
 
-        // 3. Check if this ID exists in faculty_info
+        // else Check   ID exists in faculty_info
         $sql_faculty = "SELECT userID FROM faculty_info WHERE userID = '$user_id'";
         $res_faculty = mysqli_query($conn, $sql_faculty);
 
@@ -56,11 +56,9 @@ if (isset($_POST['login'])) {
         <p class="brand-subhead">Your Study Partner</p>
     </div>
 
-    <?php if (!empty($error)): ?>
-        <div style="color: red; text-align: center; margin-bottom: 12px; font-size: 14px;">
-            <?php echo $error; ?>
-        </div>
-    <?php endif; ?>
+    <?php if (!empty($error)) { ?>
+    <div style="color: red;"><?php echo $error; ?></div>
+<?php } ?>
 
     <form method="POST" action="login.php">
         <div class="form-group">

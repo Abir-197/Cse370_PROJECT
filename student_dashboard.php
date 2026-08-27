@@ -2,7 +2,7 @@
 session_start();
 include 'db.php';
 
-// Redirect to login if user is not authenticated
+
 if (!isset($_SESSION['userID'])) {
     header("Location: login.php");
     exit();
@@ -42,7 +42,7 @@ $user_id = $_SESSION['userID'];
     <!-- Main Content Area -->
     <main class="main-content">
         <section class="welcome-banner">
-            <h2>Welcome back, <?php echo htmlspecialchars($user_id); ?>!</h2>
+            <h2>Welcome back, <?php echo $user_id; ?>!</h2>
             <p>Access your enrolled courses, study circles, mentorship programs, and daily schedule.</p>
         </section>
 
@@ -64,21 +64,21 @@ $user_id = $_SESSION['userID'];
                 <a href="mycourses.php" class="card-btn">View Courses</a>
             </div>
 
-            <!-- 3. My Groups -->
+            <!-- My Groups -->
             <div class="card">
                 <div class="card-icon">👥</div>
                 <h3>My Groups</h3>
                 <p>Collaborate with classmates and join project and study groups.</p>
                 <a href="mygroups.php" class="card-btn">Open Groups</a>
             </div>
-<!-- 2. Find Student / All Students -->
+          <!-- Find student  -->
             <div class="card">
                 <div class="card-icon">🔍</div>
                 <h3>Find Student</h3>
                 <p>Search the student directory, view peer profiles, and connect with batchmates.</p>
                 <a href="student_search_student.php" class="card-btn">Browse Students</a>
             </div>
-            <!-- 4. Find Mentor -->
+            <!-- Find Mentor -->
             <div class="card">
                 <div class="card-icon">🔍</div>
                 <h3>Find Mentor</h3>
@@ -86,7 +86,7 @@ $user_id = $_SESSION['userID'];
                 <a href="findmentor.php" class="card-btn">Find Guidance</a>
             </div>
 
-            <!-- 5. Me as Mentor -->
+            <!-- Me as Mentor -->
             <div class="card">
                 <div class="card-icon">🎓</div>
                 <h3>Be a Mentor</h3>
@@ -94,7 +94,7 @@ $user_id = $_SESSION['userID'];
                 <a href="meMentor.php" class="card-btn">Mentorship Hub</a>
             </div>
 
-            <!-- 6. My Schedule -->
+            <!-- Schedule -->
             <div class="card">
                 <div class="card-icon">🗓️</div>
                 <h3>My Schedule</h3>
@@ -102,7 +102,7 @@ $user_id = $_SESSION['userID'];
                 <a href="myschedule.php" class="card-btn">View Routine</a>
             </div>
 
-            <!-- 7. Faculties -->
+            <!-- Faculties -->
             <div class="card">
                 <div class="card-icon">👨‍🏫</div>
                 <h3>Faculties</h3>

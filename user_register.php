@@ -16,32 +16,32 @@ if (isset($_POST['register'])) {
     $first_char = $user_id[0] ?? '';
     $rest_of_id = substr($user_id, 1);
 
-    // 1. Length validation (1 to 8 characters)
+    //. Length validation (1 to 8 characters)
     if (empty($user_id) || strlen($user_id) > 8) {
         $error = "User ID must be between 1 and 8 characters.";
     } 
-    // 2. Custom Constraint: Checks if 1st char is 'A' (or 'a') AND the rest are numbers
+    // Checks if 1st char is 'A' (or 'a') AND the rest are numbers
     else if (($first_char == 'A' || $first_char == 'a') && is_numeric($rest_of_id)) {
         $error = "Only Admin can have an ID starting with 'A' followed by numbers.";
     } 
     else {
-        // 3. Duplicate check (UserID or Email)
+        // Duplicate check (UserID or Email)
         $check_sql = "SELECT userID FROM user_info WHERE userID = '$user_id' OR email = '$email'";
         $check_res = mysqli_query($conn, $check_sql);
 
         if (mysqli_num_rows($check_res) > 0) {
             $error = "This User ID or Email is already registered!";
         } else {
-            // 4. Insert into user_info table
+            // Insert into user_info table
             $sql_user = "INSERT INTO user_info (userID, name, email, password, road, area, AdminID) 
                          VALUES ('$user_id', '$name', '$email', '$password', '$road', '$area', 'A1')";
             
             if (mysqli_query($conn, $sql_user)) {
-                // 5. Insert phone number into userphone table
+                // Insert phone number into userphone table
                 $insert_phn = "INSERT INTO userphone (userID, phone) VALUES ('$user_id', '$phone')";
                 mysqli_query($conn, $insert_phn);
 
-                // 6. Insert only userID into student or faculty role table
+                // Insert only userID into student or faculty role table
                 if ($user_type == "student") {
                     $sql_role = "INSERT INTO student_info (userID) VALUES ('$user_id')";
                 } else {
