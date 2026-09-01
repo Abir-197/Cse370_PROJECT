@@ -1,46 +1,49 @@
+-- StudyVerse Admin + Study Group extension for MySQL/MariaDB
 USE studyverse;
 
--- 1) Admin password (safe for the supplied admin-ready schema)
-ALTER TABLE admin_info
-ADD COLUMN IF NOT EXISTS password VARCHAR(255) NOT NULL DEFAULT 'admin123';
-
--- 2) Admin-to-admin responses/messages
-CREATE TABLE IF NOT EXISTS admin_messages (
-    messageID INT AUTO_INCREMENT PRIMARY KEY,
-    senderAdminID VARCHAR(8) NOT NULL,
-    receiverAdminID VARCHAR(8) NOT NULL,
-    message VARCHAR(1000) NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'UNREAD',
-    sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (senderAdminID) REFERENCES admin_info(AdminID) ON DELETE CASCADE,
-    FOREIGN KEY (receiverAdminID) REFERENCES admin_info(AdminID) ON DELETE CASCADE
-);
-
--- 3) Work Due
+CREATE TABLE IF NOT EXISTS course_prerequisite (coursecode VARCHAR(10) NOT NULL, prereq_code VARCHAR(10) NOT NULL, prereq_type VARCHAR(10) NOT NULL, PRIMARY KEY(coursecode,prereq_code));
 CREATE TABLE IF NOT EXISTS admin_work_due (
-    workID INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(150) NOT NULL,
-    description VARCHAR(500) NOT NULL,
-    due_date DATE NOT NULL,
-    assignedAdminID VARCHAR(8) NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (assignedAdminID) REFERENCES admin_info(AdminID) ON DELETE CASCADE
+  workID INT AUTO_INCREMENT PRIMARY KEY, adminID VARCHAR(8) NOT NULL, title VARCHAR(150) NOT NULL,
+  details VARCHAR(500) NOT NULL, status VARCHAR(20) NOT NULL DEFAULT 'PENDING', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS admin_messages (
+  messageID INT AUTO_INCREMENT PRIMARY KEY, fromAdmin VARCHAR(8) NOT NULL, toAdmin VARCHAR(8) NOT NULL,
+  message VARCHAR(500) NOT NULL, status VARCHAR(20) DEFAULT 'UNREAD', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS content_reports (
+  reportID INT AUTO_INCREMENT PRIMARY KEY, reporterID VARCHAR(8) NOT NULL, report_type VARCHAR(30) NOT NULL,
+  targetID VARCHAR(20) NOT NULL, reason VARCHAR(500) NOT NULL, status VARCHAR(20) DEFAULT 'PENDING', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS admin_course_delete_requests (
+  requestID INT AUTO_INCREMENT PRIMARY KEY, coursecode VARCHAR(10) NOT NULL, requestedBy VARCHAR(8) NOT NULL,
+  status VARCHAR(20) DEFAULT 'PENDING', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS admin_course_delete_votes (
+  requestID INT NOT NULL, adminID VARCHAR(8) NOT NULL, vote VARCHAR(3) NOT NULL,
+  PRIMARY KEY(requestID, adminID)
+);
+CREATE TABLE IF NOT EXISTS repo_creation_requests (
+  requestID INT AUTO_INCREMENT PRIMARY KEY, repoID VARCHAR(10) NOT NULL, coursecode VARCHAR(10) NOT NULL,
+  requestedBy VARCHAR(8) NOT NULL, status VARCHAR(20) DEFAULT 'PENDING', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS group_join_requests (
+  requestID INT AUTO_INCREMENT PRIMARY KEY, groupID VARCHAR(10) NOT NULL, student_UID VARCHAR(8) NOT NULL,
+  status VARCHAR(20) DEFAULT 'PENDING', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS group_messages (
+  messageID INT AUTO_INCREMENT PRIMARY KEY, groupID VARCHAR(10) NOT NULL, senderID VARCHAR(8) NOT NULL,
+  message VARCHAR(500) NOT NULL, message_type VARCHAR(30) DEFAULT 'JOIN', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS group_weekly_goals (
+  goalID INT AUTO_INCREMENT PRIMARY KEY, groupID VARCHAR(10) NOT NULL, studentID VARCHAR(8) NOT NULL,
+  goal VARCHAR(300) NOT NULL, week_start DATE NOT NULL, completed TINYINT(1) DEFAULT 0,
+  UNIQUE KEY uq_goal(groupID,studentID,week_start)
 );
 
--- 4) Reports
-CREATE TABLE IF NOT EXISTS admin_reports (
-    reportID INT AUTO_INCREMENT PRIMARY KEY,
-    reporterID VARCHAR(8) NOT NULL,
-    targetType VARCHAR(30) NOT NULL,
-    targetID VARCHAR(20) NOT NULL,
-    reason VARCHAR(500) NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
-    reported_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    handledBy VARCHAR(8) DEFAULT NULL,
-    handled_at TIMESTAMP NULL DEFAULT NULL
-);
+-- Needed for semester-aware course usage and grade-based performance.
+ALTER TABLE course_student_took ADD COLUMN enrollment_semester VARCHAR(30) NULL;
+ALTER TABLE course_student_took ADD COLUMN grade DECIMAL(5,2) NULL;
 
--- Example:
--- INSERT INTO admin_work_due(title,description,due_date,assignedAdminID)
--- VALUES ('Review course reports','Review newly submitted course reports','2026-09-10','A1');
+-- Optional useful performance counters for resources.
+ALTER TABLE course_resouce ADD COLUMN view_count INT NOT NULL DEFAULT 0;
+ALTER TABLE course_resouce ADD COLUMN download_count INT NOT NULL DEFAULT 0;

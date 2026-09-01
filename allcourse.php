@@ -1,51 +1,9 @@
-<?php
-session_start();
-include "admin_db.php";
-
-if (!isset($_SESSION["AdminID"])) {
-    header("Location: admin_login.php");
-    exit();
-}
-
-$adminID = $_SESSION["AdminID"];
-
-if (strlen($adminID) > 8 || strtoupper(substr($adminID, 0, 1)) != "A") {
-    session_destroy();
-    header("Location: admin_login.php");
-    exit();
-}
-
-$adminQuery = "SELECT AdminID, name, email, phone FROM admin_info WHERE AdminID='$adminID'";
-$adminResult = mysqli_query($conn, $adminQuery);
-
-if (!$adminResult || mysqli_num_rows($adminResult) == 0) {
-    session_destroy();
-    header("Location: admin_login.php");
-    exit();
-}
-
-$admin = mysqli_fetch_assoc($adminResult);
-
-function e($value) {
-    return htmlspecialchars($value ?? "", ENT_QUOTES, "UTF-8");
-}
+<?php require 'admin_guard.php'; require 'admin_db.php';
+$q=trim($_GET['q']??''); $filter=$_GET['filter']??'all'; $semester=trim($_GET['semester']??'');
+$where=''; $params=[]; $types=''; if($q!==''){ $where=' WHERE c.coursecode LIKE ? OR c.name LIKE ?'; $params=["%$q%","%$q%"];$types='ss'; }
+if($filter==='usage' && $semester!==''){ $where .= ($where?' AND ':' WHERE ').'e.enrollment_semester LIKE "'.mysqli_real_escape_string($conn,$semester).'"'; }
+if($filter==='top') $order=' ORDER BY COALESCE(g.avggrade,0) DESC, COALESCE(fr.avgrating,0) DESC'; elseif($filter==='low') $order=' ORDER BY COALESCE(g.avggrade,0) ASC, COALESCE(fr.avgrating,0) ASC'; elseif($filter==='faculty') $order=' ORDER BY faculty_count DESC'; elseif($filter==='usage') $order=' ORDER BY student_count DESC'; else $order=' ORDER BY c.coursecode';
+$sql="SELECT c.coursecode,c.name,COUNT(DISTINCT r.repoID) repo_count,COUNT(DISTINCT e.userID) student_count,COUNT(DISTINCT f.faculty_UID) faculty_count,ROUND(COALESCE(cr.avg_rate,0),2) course_rating,COALESCE(g.avggrade,0) avggrade,COALESCE(fr.avgrating,0) faculty_rating FROM course c LEFT JOIN repository r ON r.coursecode=c.coursecode LEFT JOIN course_student_took e ON e.coursecode=c.coursecode LEFT JOIN faculty_courselist f ON f.coursecode=c.coursecode LEFT JOIN (SELECT coursecode,AVG(rate) avg_rate FROM student_review_course GROUP BY coursecode) cr ON cr.coursecode=c.coursecode LEFT JOIN (SELECT coursecode,AVG(grade) avggrade FROM course_student_took WHERE grade IS NOT NULL GROUP BY coursecode) g ON g.coursecode=c.coursecode LEFT JOIN (SELECT fcl.coursecode,AVG(srf.rating) avgrating FROM faculty_courselist fcl JOIN student_rates_faculty srf ON srf.faculty_uID=fcl.faculty_UID GROUP BY fcl.coursecode) fr ON fr.coursecode=c.coursecode $where GROUP BY c.coursecode,c.name,cr.avg_rate,g.avggrade,fr.avgrating $order";
+$stmt=mysqli_prepare($conn,$sql); if($q!=='') mysqli_stmt_bind_param($stmt,$types,...$params); mysqli_stmt_execute($stmt); $rows=mysqli_stmt_get_result($stmt);
 ?>
-<?php
-$message="";
-if(isset($_POST["add_course"])){
-$code=$_POST["coursecode"];$name=$_POST["name"];$desc=$_POST["description"];$credit=$_POST["credit"];$mark=$_POST["total_mark"];
-$sql="INSERT INTO course(coursecode,name,description,credit,total_mark,admin) VALUES('$code','$name','$desc','$credit','$mark','$adminID')";
-$message=mysqli_query($conn,$sql)?"Course added successfully.":"Course could not be added: ".mysqli_error($conn);
-}
-if(isset($_GET["delete"])){
-$code=$_GET["delete"];mysqli_query($conn,"DELETE FROM course WHERE coursecode='$code' AND admin='$adminID'");header("Location: allcourse.php");exit();
-}
-$search=isset($_GET["q"])?$_GET["q"]:"";
-$sql="SELECT * FROM course WHERE coursecode LIKE '%$search%' OR name LIKE '%$search%' ORDER BY coursecode";
-$result=mysqli_query($conn,$sql);
-?>
-<!DOCTYPE html><html><head><meta charset="UTF-8"><title>All Courses</title><link rel="stylesheet" href="admin_pages.css"></head><body>
-<div class="admin-layout"><aside class="sidebar"><div class="logo">Study<span>verse</span></div><nav class="nav"><a href="admin_dashboard.php">Dashboard</a><a class="active" href="allcourse.php">All Courses</a><a href="allrepository.php">Repository</a><a href="checkAllUser.php">All Users</a><a href="manage_reports.php">Reports</a><a href="logout.php" class="logout">Logout</a></nav></aside><main class="main"><div class="top"><div><h1>See All Course Info</h1><p class="muted">Course management for AdminID <?php echo e($adminID); ?></p></div></div>
-<?php if($message!=""){?><div class="alert ok"><?php echo e($message);?></div><?php }?>
-<section class="panel"><h2>Add Course</h2><form method="POST"><div class="form-grid"><div class="field"><label>Course Code</label><input name="coursecode" maxlength="10" required></div><div class="field"><label>Course Name</label><input name="name" required></div><div class="field"><label>Credit</label><input type="number" step="0.01" name="credit" required></div><div class="field"><label>Total Mark</label><input type="number" name="total_mark" required></div></div><div class="field"><label>Description</label><textarea name="description" required></textarea></div><button class="btn" name="add_course">Add Course</button></form></section>
-<section class="panel"><form class="search"><input name="q" value="<?php echo e($search);?>" placeholder="Search course"><button class="btn">Search</button></form><table><tr><th>Code</th><th>Name</th><th>Description</th><th>Credit</th><th>Mark</th><th>Admin</th><th>Action</th></tr><?php while($r=mysqli_fetch_assoc($result)){?><tr><td><?php echo e($r["coursecode"]);?></td><td><?php echo e($r["name"]);?></td><td><?php echo e($r["description"]);?></td><td><?php echo e($r["credit"]);?></td><td><?php echo e($r["total_mark"]);?></td><td><?php echo e($r["admin"]);?></td><td class="actions-inline"><a class="btn" href="edit_course.php?coursecode=<?php echo urlencode($r["coursecode"]);?>">Update</a><a class="btn red" href="allcourse.php?delete=<?php echo urlencode($r["coursecode"]);?>">Delete</a></td></tr><?php }?></table></section></main></div></body></html>
+<!doctype html><html><head><title>All Course Info</title><link rel="stylesheet" href="admin_pages.css"></head><body><div class="page"><div class="top"><div><h1>All Course Information</h1><p class="muted">Search now; more search options can be added later.</p></div><a class="btn" href="admin_dashboard.php">Dashboard</a></div><div class="panel"><form class="filters"><input name="q" value="<?=htmlspecialchars($q)?>" placeholder="Search by course code or course name"><select name="filter"><option value="all">All courses</option><option value="top" <?=$filter==='top'?'selected':''?>>Top performing</option><option value="low" <?=$filter==='low'?'selected':''?>>Low performing</option><option value="usage" <?=$filter==='usage'?'selected':''?>>Top using / highest enrollment</option><option value="faculty" <?=$filter==='faculty'?'selected':''?>>Max faculty</option></select><input name="semester" value="<?=htmlspecialchars($semester)?>" placeholder="Semester for usage filter (e.g. Summer 2026)"><button>Apply</button></form></div><div class="panel tablewrap"><table><tr><th>Course Code</th><th>Course Name</th><th>Repo No.</th><th>Total Students</th><th>Total Faculty</th><th>Avg Rating</th><th>Performance Grade</th><th>Actions</th></tr><?php while($x=mysqli_fetch_assoc($rows)): ?><tr><td><?=htmlspecialchars($x['coursecode'])?></td><td><?=htmlspecialchars($x['name'])?></td><td><?=$x['repo_count']?></td><td><?=$x['student_count']?></td><td><?=$x['faculty_count']?></td><td><?=$x['course_rating']?></td><td><?=$x['avggrade']?></td><td class="actions"><a class="btn" href="edit_course.php?coursecode=<?=urlencode($x['coursecode'])?>">Update</a><a class="btn danger" href="delete_course.php?coursecode=<?=urlencode($x['coursecode'])?>">Delete</a></td></tr><?php endwhile;?></table></div><div class="panel"><h2>Course Actions</h2><a class="btn" href="insert_course.php">＋ Add Course</a></div></div></body></html>

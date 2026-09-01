@@ -1,37 +1,7 @@
-<?php
-session_start();
-include "admin_db.php";
-
-if (!isset($_SESSION["AdminID"])) {
-    header("Location: admin_login.php");
-    exit();
-}
-
-$adminID = $_SESSION["AdminID"];
-
-if (strlen($adminID) > 8 || strtoupper(substr($adminID, 0, 1)) != "A") {
-    session_destroy();
-    header("Location: admin_login.php");
-    exit();
-}
-
-$adminQuery = "SELECT AdminID, name, email, phone FROM admin_info WHERE AdminID='$adminID'";
-$adminResult = mysqli_query($conn, $adminQuery);
-
-if (!$adminResult || mysqli_num_rows($adminResult) == 0) {
-    session_destroy();
-    header("Location: admin_login.php");
-    exit();
-}
-
-$admin = mysqli_fetch_assoc($adminResult);
-
-function e($value) {
-    return htmlspecialchars($value ?? "", ENT_QUOTES, "UTF-8");
-}
-?>
-<?php
-function ct($c,$t){$r=mysqli_query($c,"SELECT COUNT(*) AS n FROM $t");return $r?mysqli_fetch_assoc($r)["n"]:0;}
-$users=ct($conn,"user_info");$admins=ct($conn,"admin_info");$students=ct($conn,"student_info");$faculty=ct($conn,"faculty_info");$courses=ct($conn,"course");$repos=ct($conn,"repository");$groups=ct($conn,"group_info");$resources=ct($conn,"course_resouce");$reviews=ct($conn,"student_reviews_resources")+ct($conn,"student_review_course");
-?>
-<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Website Performance</title><link rel="stylesheet" href="admin_pages.css"></head><body><div class="admin-layout"><aside class="sidebar"><div class="logo">Study<span>verse</span></div><nav class="nav"><a href="admin_dashboard.php">Dashboard</a><a class="active" href="website_performance.php">Performance</a><a href="logout.php" class="logout">Logout</a></nav></aside><main class="main"><div class="top"><div><h1>Website Performance</h1><p class="muted">Basic database-backed platform statistics.</p></div></div><section class="stats"><div class="stat"><small>Users</small><strong><?php echo $users;?></strong></div><div class="stat"><small>Admins</small><strong><?php echo $admins;?></strong></div><div class="stat"><small>Students</small><strong><?php echo $students;?></strong></div><div class="stat"><small>Faculty</small><strong><?php echo $faculty;?></strong></div></section><section class="stats"><div class="stat"><small>Courses</small><strong><?php echo $courses;?></strong></div><div class="stat"><small>Repositories</small><strong><?php echo $repos;?></strong></div><div class="stat"><small>Study Groups</small><strong><?php echo $groups;?></strong></div><div class="stat"><small>Reviews</small><strong><?php echo $reviews;?></strong></div></section><section class="panel"><h2>Resource Records</h2><p class="muted">Course resources stored: <?php echo $resources;?></p></section></main></div></body></html>
+<?php require 'admin_guard.php';require 'admin_db.php';
+function one($c,$sql){$r=mysqli_query($c,$sql);$x=mysqli_fetch_assoc($r);return (float)($x['n']??0);}
+$aid=mysqli_real_escape_string($conn,$adminID);
+$totalUsers=one($conn,'SELECT COUNT(*) n FROM user_info');$myUsers=one($conn,"SELECT COUNT(*) n FROM user_info WHERE AdminID='$aid'");$students=one($conn,'SELECT COUNT(*) n FROM student_info');$mentors=one($conn,'SELECT COUNT(*) n FROM mentor');$faculty=one($conn,'SELECT COUNT(*) n FROM faculty_info');$consult=one($conn,'SELECT COUNT(*) n FROM student_faculty_consultation');$myStudent=one($conn,"SELECT COUNT(*) n FROM student_info s JOIN user_info u ON u.userID=s.userID WHERE u.AdminID='$aid'");$myMentor=one($conn,"SELECT COUNT(*) n FROM mentor m JOIN user_info u ON u.userID=m.userID WHERE u.AdminID='$aid'");$myFaculty=one($conn,"SELECT COUNT(*) n FROM faculty_info f JOIN user_info u ON u.userID=f.userID WHERE u.AdminID='$aid'");$myConsult=one($conn,"SELECT COUNT(*) n FROM student_faculty_consultation c JOIN user_info u ON u.userID=c.student_uID WHERE u.AdminID='$aid'");
+$totalContent=one($conn,'SELECT COUNT(*) n FROM resource_uploaded_in_repo');$myContent=one($conn,"SELECT COUNT(*) n FROM course_resouce r JOIN user_info u ON u.userID=r.student_UID WHERE u.AdminID='$aid'");$myRepos=one($conn,"SELECT COUNT(*) n FROM repository WHERE adminID='$aid'");$totalRepos=one($conn,'SELECT COUNT(*) n FROM repository');$myGroups=one($conn,"SELECT COUNT(*) n FROM group_info WHERE adminID='$aid'");$topContent=one($conn,'SELECT MAX(n) n FROM (SELECT student_UID,COUNT(*) n FROM course_resouce GROUP BY student_UID) x');$myTop=one($conn,"SELECT MAX(n) n FROM (SELECT r.student_UID,COUNT(*) n FROM course_resouce r JOIN user_info u ON u.userID=r.student_UID WHERE u.AdminID='$aid' GROUP BY r.student_UID) x");$last30=one($conn,"SELECT COUNT(*) n FROM student_joins_group WHERE joindate>=DATE_SUB(CURDATE(),INTERVAL 30 DAY)");$myLast30=one($conn,"SELECT COUNT(*) n FROM student_joins_group j JOIN user_info u ON u.userID=j.student_UID WHERE u.AdminID='$aid' AND j.joindate>=DATE_SUB(CURDATE(),INTERVAL 30 DAY)");
+function pct($a,$b){return $b?round(($a/$b)*100,1):0;}function goal($mine,$best){if($mine>=$best)return 'You are at the best level.';return 'Need '.($best-$mine).' more to catch the best.';}
+?><!doctype html><html><head><title>Website Performance</title><link rel="stylesheet" href="admin_pages.css"></head><body><div class="page"><div class="top"><div><h1>WebUsageCalc</h1><p class="muted">Operating Admin: <?=htmlspecialchars($adminID)?></p></div><a class="btn" href="admin_dashboard.php">Dashboard</a></div><div class="grid"><div class="panel"><div class="metric"><?=$totalUsers?></div><div>Total Users</div><p>Your users: <?=$myUsers?> (<?=pct($myUsers,$totalUsers)?>%)</p></div><div class="panel"><div class="metric"><?=$students?></div><div>Students</div><p>Your students: <?=$myStudent?> (<?=pct($myStudent,$students)?>%)</p></div><div class="panel"><div class="metric"><?=$mentors?></div><div>Mentors</div><p>Your mentors: <?=$myMentor?> (<?=pct($myMentor,$mentors)?>%)</p></div><div class="panel"><div class="metric"><?=$faculty?></div><div>Faculty</div><p>Your faculty: <?=$myFaculty?> (<?=pct($myFaculty,$faculty)?>%)</p></div><div class="panel"><div class="metric"><?=$consult?></div><div>Consultations</div><p>Your users' consultations: <?=$myConsult?> (<?=pct($myConsult,$consult)?>%)</p></div></div><div class="panel"><h2>P2 — All Content vs Your Users</h2><p>Total repo content: <b><?=$totalContent?></b> | Content by your users: <b><?=$myContent?></b> (<?=pct($myContent,$totalContent)?>%)</p><p>Repositories: <b><?=$totalRepos?></b> | Yours: <b><?=$myRepos?></b> (<?=pct($myRepos,$totalRepos)?>%)</p><p>Best single-user contribution: <b><?=$topContent?></b> | Your best: <b><?=$myTop?></b> — <?=goal($myTop,$topContent)?></p></div><div class="panel"><h2>P3 — Engagement (Past 30 Days)</h2><p>All users' group joins: <b><?=$last30?></b> | Your users: <b><?=$myLast30?></b> (<?=pct($myLast30,$last30)?>%)</p><p><b>Top contributor goal:</b> each admin can set a simple target above the current best; your gap is calculated separately for contribution and 30-day engagement.</p><p><b>Best status:</b> <?=goal($myLast30,$last30)?></p><h3>Basic Goals</h3><ul><li>Increase active student contributors.</li><li>Encourage top student users to upload useful material and join groups.</li><li>Use offers/gifts according to your project rules to motivate contribution.</li></ul></div><div class="panel"><h2>Data limitation note</h2><p>The supplied schema does not contain a historical semester grade table or a faculty-content verification flag, so this page does not invent those values. The course page uses the optional <code>grade</code> and <code>enrollment_semester</code> fields added by the patch.</p></div></div></body></html>

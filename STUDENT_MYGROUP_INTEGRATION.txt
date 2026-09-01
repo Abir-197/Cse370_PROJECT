@@ -1,0 +1,4 @@
+Add this card/link inside the existing student_dashboard.php card area without changing other student features:
+<a href="mygroup.php" class="card">My Group</a>
+
+The supplied project schema already contains group_info, student_joins_group and group_consult_faculty. The new pages add group_join_requests, group_messages and group_weekly_goals through admin_database_patch.sql.
