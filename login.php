@@ -8,15 +8,15 @@ if (isset($_POST['login'])) {
     $user_id  = trim($_POST['userid']);
     $password = trim($_POST['password']);
 
-    //user exists with matching password
+    // Check if user exists with matching password
     $sql = "SELECT userID FROM user_info WHERE userID = '$user_id' AND password = '$password'";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
-        // Save the User ID in session directly from form input
+        // Save the User ID in session
         $_SESSION['userID'] = $user_id;
 
-        //Check ID exists in student_info
+        // Check if ID exists in student_info
         $sql_student = "SELECT userID FROM student_info WHERE userID = '$user_id'";
         $res_student = mysqli_query($conn, $sql_student);
 
@@ -25,7 +25,7 @@ if (isset($_POST['login'])) {
             exit();
         }
 
-        // else Check   ID exists in faculty_info
+        // Check if ID exists in faculty_info
         $sql_faculty = "SELECT userID FROM faculty_info WHERE userID = '$user_id'";
         $res_faculty = mysqli_query($conn, $sql_faculty);
 
@@ -57,8 +57,8 @@ if (isset($_POST['login'])) {
     </div>
 
     <?php if (!empty($error)) { ?>
-    <div style="color: red;"><?php echo $error; ?></div>
-<?php } ?>
+        <div style="color: red; margin-bottom: 12px; font-weight: bold;"><?php echo $error; ?></div>
+    <?php } ?>
 
     <form method="POST" action="login.php">
         <div class="form-group">
@@ -88,9 +88,15 @@ if (isset($_POST['login'])) {
         <button type="submit" name="login" class="btn-submit">Sign In</button>
     </form>
 
-    <div class="auth-footer">
-        <span>Don't have an account? </span>
-        <a href="user_register.php" class="auth-link">Register here</a>
+    <div class="auth-footer" style="margin-top: 15px; text-align: center; font-size: 13px;">
+        <p style="margin: 6px 0;">
+            <span>Don't have an account? </span>
+            <a href="user_register.php" class="auth-link">Register here</a>
+        </p>
+        <p style="margin: 6px 0;">
+            <span>Are you an Admin? </span>
+            <a href="admin_login.php" class="auth-link" style="color: #007bff; font-weight: bold;">Login as Admin here</a>
+        </p>
     </div>
 </div>
 

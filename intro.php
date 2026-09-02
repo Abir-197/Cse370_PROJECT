@@ -1,6 +1,6 @@
 <?php
 session_start();
-$isLoggedIn = isset($_SESSION['uid']);
+$isLoggedIn = isset($_SESSION['userID']);
 $userName = $isLoggedIn ? htmlspecialchars($_SESSION['name'] ?? 'User') : '';
 ?>
 <!DOCTYPE html>
@@ -24,7 +24,7 @@ $userName = $isLoggedIn ? htmlspecialchars($_SESSION['name'] ?? 'User') : '';
                 <a href="logout.php" class="btn-nav-logout">Logout</a>
             <?php else: ?>
                 <a href="login.php" class="btn-nav-login">Login</a>
-                <a href="register.php" class="btn-nav-register">Register</a>
+                <a href="user_register.php" class="btn-nav-register">Register</a>
             <?php endif; ?>
         </nav>
     </header>
@@ -38,7 +38,7 @@ $userName = $isLoggedIn ? htmlspecialchars($_SESSION['name'] ?? 'User') : '';
             <?php if ($isLoggedIn): ?>
                 <a href="dashboard.php" class="btn-cta-primary">Go to Dashboard</a>
             <?php else: ?>
-                <a href="register.php" class="btn-cta-primary">Get Started</a>
+                <a href="user_register.php" class="btn-cta-primary">Get Started</a>
             <?php endif; ?>
         </div>
     </main>

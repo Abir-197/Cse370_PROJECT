@@ -1,0 +1,235 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    color: #1e293b;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    background: #1e293b;
+    color: #ffffff;
+    padding: 18px 24px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    margin: 0 0 4px 0;
+    font-size: 22px;
+}
+
+.header p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.nav-links a {
+    color: #ffffff;
+    margin-left: 14px;
+    text-decoration: underline;
+    font-size: 13px;
+}
+
+.card {
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.filter-card {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr auto;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.form-control {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+.form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    color: #475569;
+    margin-bottom: 4px;
+}
+
+.btn {
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary { 
+    background: #2563eb; 
+    color: #ffffff; 
+}
+
+.btn-primary:hover { 
+    background: #1d4ed8; 
+}
+
+.btn-reset { 
+    background: #64748b; 
+    color: #ffffff; 
+}
+
+.btn-submit-review {
+    background: #059669;
+    color: #ffffff;
+    padding: 6px 12px;
+    font-size: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-submit-review:hover {
+    background: #047857;
+}
+
+.alert {
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.alert-success { 
+    background: #dcfce7; 
+    color: #15803d; 
+    border: 1px solid #86efac; 
+}
+
+.alert-danger { 
+    background: #fee2e2; 
+    color: #b91c1c; 
+    border: 1px solid #fca5a5; 
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 18px;
+}
+
+.content-card {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-top: 4px solid #2563eb;
+    border-radius: 8px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.content-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.badge-course {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.badge-category {
+    background: #f1f5f9;
+    color: #334155;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.star-rating {
+    color: #d97706;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.not-reviewed {
+    color: #94a3b8;
+    font-style: italic;
+    font-size: 12px;
+}
+
+.review-box {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed #cbd5e1;
+}
+
+.review-box summary {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2563eb;
+    cursor: pointer;
+    outline: none;
+}
+
+.review-form {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.recent-reviews {
+    margin-top: 10px;
+    background: #f8fafc;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 12px;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.review-item {
+    padding: 4px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.review-item:last-child {
+    border-bottom: none;
+}
