@@ -1,0 +1,138 @@
+.main-content {
+    max-width: 1200px;
+    width: 100%;
+    margin: 30px auto;
+    padding: 0 20px 40px;
+}
+
+.welcome-banner,
+.profile-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+}
+
+.welcome-banner {
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.welcome-banner h2,
+.profile-card h3 {
+    color: #0f172a;
+    margin: 0 0 8px;
+}
+
+.welcome-banner p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.alert {
+    border-radius: 10px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding: 12px 14px;
+}
+
+.alert-success {
+    background: #dcfce7;
+    border: 1px solid #86efac;
+    color: #166534;
+}
+
+.alert-error {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.profile-card {
+    padding: 24px;
+}
+
+.detail-list {
+    display: grid;
+    gap: 14px;
+}
+
+.detail-list div {
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 12px;
+}
+
+.detail-list span {
+    color: #64748b;
+}
+
+.detail-list strong {
+    color: #0f172a;
+    text-align: right;
+}
+
+.bio-form {
+    display: grid;
+    gap: 10px;
+}
+
+.bio-form label {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.bio-form textarea {
+    background: #f8fafc;
+    border: 1px solid #dbe3ee;
+    border-radius: 10px;
+    color: #0f172a;
+    font: inherit;
+    min-height: 190px;
+    padding: 12px 14px;
+    resize: vertical;
+}
+
+.bio-form textarea:focus {
+    background: #ffffff;
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    outline: none;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.2);
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 11px 16px;
+}
+
+@media (max-width: 800px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-list div {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .detail-list strong {
+        text-align: left;
+    }
+}

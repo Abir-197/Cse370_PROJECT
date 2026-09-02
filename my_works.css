@@ -1,0 +1,244 @@
+.main-content {
+    max-width: 1200px;
+    width: 100%;
+    margin: 30px auto;
+    padding: 0 20px 40px;
+}
+
+.welcome-banner {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 24px;
+}
+
+.welcome-banner h2 {
+    font-size: 22px;
+    margin-bottom: 6px;
+    color: #0f172a;
+}
+
+.welcome-banner p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.alert {
+    margin: 0 0 20px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.alert-success {
+    background: #dcfce7;
+    border: 1px solid #86efac;
+    color: #166534;
+}
+
+.alert-error {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+}
+
+.panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+}
+
+.panel h3 {
+    margin-bottom: 18px;
+    color: #0f172a;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.work-form,
+.form-grid {
+    display: grid;
+    gap: 18px;
+}
+
+.form-grid label {
+    display: grid;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #334155;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+    width: 100%;
+    border: 1px solid #dbe3ee;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 14px;
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+.form-grid input:focus,
+.form-grid select:focus,
+.form-grid textarea:focus {
+    outline: none;
+    border-color: #93c5fd;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.form-grid textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.primary-btn {
+    margin-top: 18px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    padding: 11px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.2);
+}
+
+.work-list {
+    display: grid;
+    gap: 16px;
+}
+
+.work-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.03);
+}
+
+.work-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.work-item h4 {
+    color: #0f172a;
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.work-item p {
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #eff6ff;
+    color: #1d4ed8;
+    text-decoration: none;
+    border: 1px solid #bfdbfe;
+    border-radius: 9px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.empty-state {
+    color: #64748b;
+    font-size: 15px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 18px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 5px 9px;
+}
+
+.status-badge.reviewed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.review-panel {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #dfe8f3;
+}
+
+.review-panel h5 {
+    color: #0f172a;
+    margin: 0 0 12px;
+    font-size: 14px;
+}
+
+.faculty-review-item {
+    background: #ffffff;
+    border: 1px solid #dfe8f3;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+}
+
+.faculty-review-item p {
+    margin-bottom: 8px;
+}
+
+.feedback {
+    color: #1e3a8a;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .panel-grid {
+        grid-template-columns: 1fr;
+    }
+    .work-meta {
+        flex-wrap: wrap;
+    }
+}

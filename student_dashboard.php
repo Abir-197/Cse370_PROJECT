@@ -31,6 +31,8 @@ $user_id = $_SESSION['userID'];
                 <a href="mygroups.php">My Groups</a>
                 <a href="findmentor.php">Find Mentor</a>
                 <a href="faculties.php">Faculties</a>
+                <a href="my_works.php">My Works</a>
+                <a href="student_consultation_requests.php">Consultations</a>
             </nav>
             <div class="nav-user">
                 <span class="user-name">ID: <?php echo htmlspecialchars($user_id); ?></span>
@@ -53,7 +55,7 @@ $user_id = $_SESSION['userID'];
                 <div class="card-icon">👤</div>
                 <h3>My Profile</h3>
                 <p>View and update your student ID, CGPA, semester, and personal details.</p>
-                <a href="student_profile.php" class="card-btn">Edit Profile</a>
+                <a href="view_profile.php" class="card-btn">Edit Profile</a>
             </div>
 
             <!-- 2. My Courses -->
@@ -108,6 +110,22 @@ $user_id = $_SESSION['userID'];
                 <h3>Faculties</h3>
                 <p>Browse faculty directory, check office hours, and find contact info.</p>
                 <a href="faculties.php" class="card-btn">Browse Faculty</a>
+            </div>
+
+            <!-- My Works -->
+            <div class="card">
+                <div class="card-icon">🧩</div>
+                <h3>My Works</h3>
+                <p>Upload projects, papers, and journals for faculty review and feedback.</p>
+                <a href="my_works.php" class="card-btn">Upload Work</a>
+            </div>
+
+            <!-- Consultation Requests -->
+            <div class="card">
+                <div class="card-icon">📅</div>
+                <h3>Consultation Requests</h3>
+                <p>Request a consultation slot from your faculty and track the approval status.</p>
+                <a href="student_consultation_requests.php" class="card-btn">Request Consultation</a>
             </div>
         </section>
     </main>
