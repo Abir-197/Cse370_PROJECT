@@ -138,3 +138,13 @@ $user_id = $_SESSION['userID'];
 
 </body>
 </html>
+
+
+
+
+<?php require 'admin_guard.php'; require 'admin_db.php';
+function countRows($conn,$sql){$r=mysqli_query($conn,$sql);$x=mysqli_fetch_assoc($r);return $x['total']??0;}
+$c=countRows($conn,'SELECT COUNT(*) total FROM course'); $r=countRows($conn,'SELECT COUNT(*) total FROM repository'); $u=countRows($conn,'SELECT COUNT(*) total FROM user_info'); $f=countRows($conn,'SELECT COUNT(*) total FROM faculty_info'); $rep=countRows($conn,"SELECT COUNT(*) total FROM content_reports WHERE status='PENDING'");
+?>
+<!doctype html><html><head><title>Admin Dashboard</title><link rel="stylesheet" href="admin_dash.css"></head><body><div class="shell"><aside><h2>StudyVerse</h2><p>Admin Panel</p><a href="admin_dashboard.php">Dashboard</a><a href="allcourse.php">See All Course Info</a><a href="allrepository.php">See All Repository</a><a href="admin_profile.php">View Profile</a><a href="work_due.php">Work Due</a><a href="checkAllUser.php">See All User</a><a href="admin_response.php">Response Other Admins</a><a href="manage_reports.php">Manage Reports</a><a href="website_performance.php">Website Performance</a><a href="group_admin.php">Manage Groups</a><a href="logout.php">Logout</a></aside><main><h1>Welcome, <?=htmlspecialchars($_SESSION['AdminName'])?></h1><div class="cards">
+<?php $cards=[['SeeAllcourseInfo','allcourse.php',$c,'Course Catalog'],['See Allrepository','allrepository.php',$r,'Repositories'],['View profile','admin_profile.php','👤','Your Profile'],['WorkDue','work_due.php','!','Pending Work'],['See AllUser','checkAllUser.php',$u,'Users'],['Response other admins','admin_response.php','✉','Messages'],['Manage reports','manage_reports.php',$rep,'Pending Reports'],['Website performance','website_performance.php','↗','Analytics']]; foreach($cards as $x): ?><a class="card" href="<?=$x[1]?>"><span class="icon"><?=$x[2]?></span><h3><?=$x[0]?></h3><small><?=$x[3]?></small></a><?php endforeach; ?></div><div class="quick"><a href="insert_course.php">＋ Add Course</a><a href="insert_repository.php">＋ Add Repository</a><a href="insert_admin.php">＋ Add Admin</a><a href="insert_user.php">＋ Add User</a></div></main></div></body></html>
